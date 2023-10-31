@@ -1,0 +1,46 @@
+{
+  "name": "fix-import",
+  "displayName": "Fix Import",
+  "description": "Install missing package Python",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.1"
+  },
+  "publisher": "littlefox",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "fix-import.installMissingPackages",
+        "title": "Install Missing Packages"
+      }
+    ]
+  },
+  "extensionDependencies": [
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.83.1",
+    "@types/node":"^18.18.8",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.3",
+    "typescript": "^5.2.2"
+  }
+}
