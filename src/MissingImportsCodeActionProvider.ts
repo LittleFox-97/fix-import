@@ -21,15 +21,9 @@ export class MissingImportsCodeActionProvider implements vscode.CodeActionProvid
         // Check if the diagnostic is for Pylance ReportMissingImports
         const diagnostic = context.diagnostics.find(
             (diagnostic) => {
-                const source = diagnostic.source;
-                if (source === 'Pylance') {
-                    const code = diagnostic.code;
-                    if (typeof code === 'object') {
-                        const value = code.value;
-                        // TODO: добавить тип ошибки 'reportMissingModuleSource'
-                        if (value === 'reportMissingImports'|| value === 'reportMissingModuleSource') {
-                            return true;
-                        }
+                if (diagnostic.source === 'Pylance') {
+                    if (typeof diagnostic.code === 'object' && (diagnostic.code.value === 'reportMissingImports'|| diagnostic.code.value === 'reportMissingModuleSource')) {
+                        return true;
                     }
                 }
                 else {
@@ -39,9 +33,8 @@ export class MissingImportsCodeActionProvider implements vscode.CodeActionProvid
         );
 
         if (diagnostic) {
-            const message = diagnostic.message;
             // Extract the package name from the diagnostic message
-            const packageName = extractPackageName(message);
+            const packageName = extractPackageName(diagnostic.message);
 
             // Create CodeAction for installing the package
             const installPackageAction = new vscode.CodeAction(
