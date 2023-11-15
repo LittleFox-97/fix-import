@@ -27,7 +27,7 @@ export class MissingImportsCodeActionProvider implements vscode.CodeActionProvid
                     if (typeof code === 'object') {
                         const value = code.value;
                         // TODO: добавить тип ошибки 'reportMissingModuleSource'
-                        if (value === 'reportMissingImports') {
+                        if (value === 'reportMissingImports'|| value === 'reportMissingModuleSource') {
                             return true;
                         }
                     }
