@@ -1,47 +1,49 @@
 import * as vscode from 'vscode';
+import { getInfo } from './getInfo';
+import { executeCommand } from './executeCommand';
 import { MissingImportsCodeActionProvider } from './MissingImportsCodeActionProvider';
 
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    const info = await getInfo();
+   context.subscriptions.push(vscode.commands.registerCommand('fix-import.createPipenv',  async () => {
+    if (!info.version) {
+        return;
+    }
+       await createPipenv(info.version);
+   }));
+   context.subscriptions.push(vscode.commands.registerCommand('fix-import.installPackage',async (mainCommand, packageName: string, ...args: string[]) => {
+       await executeCommand(`${mainCommand} install ${args.join(' ')}${packageName}`);
+   }));
+   const mainCommand = info.mainCommand === undefined ? await createVirt() : info.mainCommand;
+   context.subscriptions.push(vscode.languages.registerCodeActionsProvider({scheme: 'file', language: 'python'}, new MissingImportsCodeActionProvider(mainCommand)));
 
-/**
- * Activates the extension and registers the installPackage command and the 
- * MissingImportsCodeActionProvider.
- *
- * @param {vscode.ExtensionContext} context - The extension context.
- * @return {void} This function does not return anything.
- */
-export function activate(context: vscode.ExtensionContext): void {
-    // Register the installPackage command
-    context.subscriptions.push(
-        vscode.commands.registerCommand('extension.installPackage', (packageName: string) => {
-            installPackage(packageName);
-        })
-    );
-    const provider = new MissingImportsCodeActionProvider();
-    // Register the CodeAction provider
-    context.subscriptions.push(
-        vscode.languages.registerCodeActionsProvider(
-            { scheme: 'file', language: 'python' },
-            provider
-        )
-    );
 }
 
-/**
- * Installs a Python package using pip.
- *
- * @param {string} packageName - The name of the package to install.
- * @return {void} This function does not return anything.
- */
-function installPackage(packageName: string): void {
-    // выбираем терминал
-    const terminal = vscode.window.activeTerminal;
-    if (terminal) {
-    terminal.show();
-    terminal.sendText(`pip install ${packageName}`);
-    }
-    else{
-        void vscode.commands.executeCommand('python.createTerminal');
+async function createVirt() {
+    const select = await vscode.window.showErrorMessage('Выбран глобальный интерпретатор. Выберите тип виртуального окружения', 'Pipvenv', 'Default');
+    
+    switch (select) {
+        case 'Pipvenv':
+            await vscode.commands.executeCommand('fix-import.createPipenv');
+            return 'pipenv';
+        case 'Default':
+            await vscode.commands.executeCommand('python.createEnvironment');
+            return 'pip';
+        default:
+            throw new Error('Unsupported environment');
     }
 }
 
 export function deactivate() {}
+
+
+async function createPipenv(version: string) {
+    try {
+        await executeCommand('pipenv --version');
+    } catch (e) {
+        await executeCommand('pip install pipenv');
+    }
+    
+    await executeCommand('$env:PIPENV_VENV_IN_PROJECT = 1');
+    await executeCommand(`pipenv --python ${version}`);
+}

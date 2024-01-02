@@ -2,13 +2,20 @@
   "name": "fix-import",
   "displayName": "Fix Import",
   "description": "Install missing package Python",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
-    "vscode": "^1.83.1"
+    "vscode": "^1.85.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LittleFox-97/fix-import.git"
   },
   "publisher": "littlefox",
   "categories": [
     "Other"
+  ],
+  "enabledApiProposals": [
+    "terminalExecuteCommandEvent"
   ],
   "activationEvents": [
     "onLanguage:python"
@@ -50,13 +57,14 @@
     "package": "vsce package"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
-    "@types/vscode": "^1.84.1",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
-    "@vscode/python-extension": "^1.0.5",
-    "eslint": "^8.53.0",
-    "glob": "^10.3.3",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.10.6",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@vscode/python-extension": "^1.0.5"
   }
 }
