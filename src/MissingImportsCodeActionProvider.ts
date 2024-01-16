@@ -39,7 +39,7 @@ constructor(mainCommand: 'pip' | 'pipenv') {
                 installPackageActionDev.command = {
                     command: 'fix-import.installPackage',
                     title: `Установить пакет ${packageName} (dev)`,
-                    arguments: [this.mainCommand, packageName, '--dev']
+                    arguments: [this.mainCommand, packageName, '--dev ']
                 };
                 codeActions.push(installPackageAction, installPackageActionDev);
             }

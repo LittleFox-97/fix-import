@@ -9,6 +9,9 @@ export default function extractPackageName(str: string): string {
         throw new Error('Text within double quotes not found');
     }
     const packageName = packageNameMatch[0];
-
-    return packageName.includes('.') ? packageName.split('.')[0] : packageName;
+    if (packageName.includes('.')) {
+        const parts = packageName.split('.');
+        return parts[0] === 'jaraco' ? `${parts[0]}.${parts[1]}` : parts[0];
+    }
+    return packageName;
 }
