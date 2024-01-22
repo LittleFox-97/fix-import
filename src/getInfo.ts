@@ -33,6 +33,7 @@ export async function getInfo() {
     if (virtTool === undefined) {
         const version = `${env.version?.major}.${env.version?.minor}.${env.version?.micro}`;
         console.log(`Версия Python: ${version}`);
+        console.log(`Тип виртуального окружения: ${virtTool}`);
         
         return { version: version };
     }
